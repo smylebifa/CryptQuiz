@@ -1,13 +1,13 @@
 <resources>
   <string name="app_name">Тест по криптографии</string>
-  <string name="true_button">Да</string>
-  <string name="false_button">Нет</string>
   <string name="correct_toast">Верно!</string>
   <string name="incorrect_toast">Неверно!</string>
+  <string name="limit_cheats">Ваши подсказки закончились!</string>
   <string name="prev_button">Previous</string>
   <string name="next_button">Next</string>
-
   <string name="cheat_button">Проверить</string>
+  <string name="show_result">Завершить тест</string>
+
 
   <string name="question_1">Что такое шифрование?</string>
   <string name="question_2">Что такое дешифрование?</string>
@@ -23,39 +23,30 @@
   <string name="answer_1_1">способ изменения сообщения или другого документа, обеспечивающее искажение его содержимого</string>
   <string name="answer_1_2">совокупность тем или иным способом структурированных данных и комплексом аппаратно-программных средств</string>
   <string name="answer_1_3">удобная среда для вычисления конечного пользователя</string>
-
   <string name="answer_2_1">на основе ключа шифрованный текст преобразуется в исходный</string>
   <string name="answer_2_2">пароли для доступа к сетевым ресурсам</string>
   <string name="answer_2_3">сертификаты для доступа к сетевым ресурсам и зашифрованным данным на самом компьютере</string>
-
   <string name="answer_3_1">преобразование обычного, понятного текста в код</string>
   <string name="answer_3_2">преобразование</string>
   <string name="answer_3_3">написание программы</string>
-
   <string name="answer_4_1">египетский текст</string>
   <string name="answer_4_2">русский</string>
   <string name="answer_4_3">нет правильного ответа</string>
-
   <string name="answer_5_1">56</string>
   <string name="answer_5_2">64</string>
   <string name="answer_5_3">32</string>
-
   <string name="answer_6_1">Определение стойкости алгоритма</string>
   <string name="answer_6_2">Увеличение количества функций замещения в криптографическом алгоритме</string>
   <string name="answer_6_3">Уменьшение количества функций подстановок в криптографическом алгоритме</string>
-
   <string name="answer_7_1">2</string>
   <string name="answer_7_2">3</string>
   <string name="answer_7_3">1</string>
-
   <string name="answer_8_1">присоединяемое к тексту его криптографическое преобразование</string>
   <string name="answer_8_2">текст</string>
   <string name="answer_8_3">зашифрованный текст</string>
-
   <string name="answer_9_1">характеристика шрифта, определяющая его стойкость к дешифрованию без знания ключа</string>
   <string name="answer_9_2">свойство гаммы</string>
   <string name="answer_9_3">все ответы верны</string>
-
   <string name="answer_10_1">Организация, которая выпускает сертификаты</string>
   <string name="answer_10_2">Организация, которая проверяет ключи шифрования</string>
   <string name="answer_10_3">Организация, которая выпускает закрытые ключи и соответствующие алгоритмы</string>

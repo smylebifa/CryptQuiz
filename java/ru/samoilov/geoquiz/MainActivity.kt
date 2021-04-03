@@ -1,16 +1,11 @@
 package ru.samoilov.geoquiz
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
-import android.view.View
 import android.widget.*
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 
 
 // Создаем переменные для объектов интерфейса...
@@ -21,6 +16,7 @@ private lateinit var radioButton1: RadioButton
 private lateinit var radioButton2: RadioButton
 private lateinit var radioButton3: RadioButton
 private lateinit var cheatButton: Button
+private lateinit var showResult: Button
 
 
 // Банк вопросов по криптографии с 3 вариантами ответа, первый из которых верный...
@@ -39,131 +35,148 @@ private val questionBank = listOf(
 // Переменная для подсчета номера вопроса...
 private var currentIndex = 0
 
+// Переменная для подсчета количества использованных подсказок...
+private var countOfCheats = 0
+
 
 class MainActivity : AppCompatActivity() {
 
-    @SuppressLint("ClickableViewAccessibility")
+  @SuppressLint("ClickableViewAccessibility")
 
-    // Основная функция при запуске приложения...
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  // Основная функция при запуске приложения...
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+    setContentView(R.layout.activity_main)
 
-        // Присвоение переменным элементам интерфейса activity_main...
-        prevButton = findViewById(R.id.prev_button)
-        nextButton = findViewById(R.id.next_button)
-        questionTextView = findViewById(R.id.question_text_view)
-        radioButton1 = findViewById(R.id.radio_1)
-        radioButton2 =findViewById(R.id.radio_2)
-        radioButton3 = findViewById(R.id.radio_3)
-        cheatButton = findViewById(R.id.cheat_button)
+    // Присвоение переменным элементам интерфейса activity_main...
+    prevButton = findViewById(R.id.prev_button)
+    nextButton = findViewById(R.id.next_button)
+    questionTextView = findViewById(R.id.question_text_view)
+    radioButton1 = findViewById(R.id.radio_1)
+    radioButton2 =findViewById(R.id.radio_2)
+    radioButton3 = findViewById(R.id.radio_3)
+    cheatButton = findViewById(R.id.cheat_button)
+    showResult = findViewById(R.id.show_result)
 
-        // Обновляем в начале для скрытия кнопки назад...
-        updateQuestion()
+    // Обновляем в начале для скрытия кнопки назад и завершить тест...
+    updateQuestion()
 
-        // Выбор предыдущего вопроса с вариантами ответов при нажатии на кнопку prev...
-        prevButton.setOnTouchListener { v, event ->
-            when (event.action) {
-                MotionEvent.ACTION_UP -> {
-                     if (currentIndex != 0) {
-                         currentIndex--
-                         updateQuestion()
-                     }
+    // Выбор предыдущего вопроса с вариантами ответов при нажатии на кнопку prev...
+    prevButton.setOnTouchListener { v, event ->
+      when (event.action) {
+        MotionEvent.ACTION_UP -> {
+          if (currentIndex != 0) {
+            currentIndex--
+            updateQuestion()
+          }
 
-                }
+        }
+      }
+
+      v?.onTouchEvent(event) ?: true
+    }
+
+    // Выбор следующего вопроса с вариантами ответов при нажатии на кнопку next...
+    nextButton.setOnTouchListener { v, event ->
+      when (event.action) {
+        MotionEvent.ACTION_UP -> {
+          if (currentIndex != questionBank.size - 1) {
+            currentIndex++
+            updateQuestion()
+          }
+
+        }
+      }
+
+      v?.onTouchEvent(event) ?: true
+    }
+
+    // Вывод сообщения верно или нет выбран ответ при нажатии на кнопку проверить...
+    cheatButton.setOnTouchListener { v, event ->
+      when (event.action) {
+        MotionEvent.ACTION_UP -> {
+          if (countOfCheats < 3) {
+            when {
+              radioButton1.isChecked -> checkAnswer(radioButton1.text.toString())
+              radioButton2.isChecked -> checkAnswer(radioButton2.text.toString())
+              else -> checkAnswer(radioButton3.text.toString())
             }
 
-            v?.onTouchEvent(event) ?: true
+            countOfCheats++
+          }
+
+          else {
+            Toast.makeText(this, R.string.limit_cheats, Toast.LENGTH_SHORT).show()
+          }
         }
+      }
 
-        // Выбор следующего вопроса с вариантами ответов при нажатии на кнопку next...
-        nextButton.setOnTouchListener { v, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_UP -> {
-                        if (currentIndex != questionBank.size - 1) {
-                            currentIndex++
-                            updateQuestion()
-                    }
+      v?.onTouchEvent(event) ?: true
+    }
 
-                    }
-            }
+    updateQuestion()
 
-            v?.onTouchEvent(event) ?: true
-        }
+  }
 
-        // Вывод сообщения верно или нет выбран ответ при нажатии на кнопку проверить...
-        cheatButton.setOnTouchListener { v, event ->
-            when (event.action) {
-                MotionEvent.ACTION_UP -> {
-                    when {
-                        radioButton1.isChecked -> checkAnswer(radioButton1.text.toString())
-                        radioButton2.isChecked -> checkAnswer(radioButton2.text.toString())
-                        else -> checkAnswer(radioButton3.text.toString())
-                    }
-                }
-            }
 
-            v?.onTouchEvent(event) ?: true
-        }
+  // Отображение текущего вопроса в поле TextView, ответов в качестве текста у RadioButton.
+  // Номер правильного ответа чередуется в такой последовательности 1 - 2 - 1 - 2 - etc.
+  // Проверка для отображения кнопок и скрытия для первого и последнего вопроса соотвественно...
+  private fun updateQuestion() {
+    val questionTextResId = questionBank[currentIndex].textResId
 
-        updateQuestion()
+    val answer1 = questionBank[currentIndex].answer1
+    val answer2 = questionBank[currentIndex].answer2
+    val answer3 = questionBank[currentIndex].answer3
 
+    questionTextView.setText(questionTextResId)
+
+    if (currentIndex % 2 == 0) {
+      radioButton1.setText(answer2)
+      radioButton2.setText(answer1)
+      radioButton3.setText(answer3)
+    }
+
+    else {
+      radioButton1.setText(answer1)
+      radioButton2.setText(answer2)
+      radioButton3.setText(answer3)
+    }
+
+    // Скрываем кнопку завершения теста...
+    showResult.isVisible = false
+
+    prevButton.isVisible = true
+    nextButton.isVisible = true
+
+    if (currentIndex == 0)
+      prevButton.isVisible = false
+
+    if (currentIndex == questionBank.size - 1) {
+      nextButton.isVisible = false
+      showResult.isVisible = true
     }
 
 
-    // Отображение текущего вопроса в поле TextView, ответов в качестве текста у RadioButton.
-    // Номер правильного ответа чередуется в такой последовательности 1 - 2 - 1 - 2 - etc.
-    // Проверка для отображения кнопок и скрытия для первого и последнего вопроса соотвественно...
-    private fun updateQuestion() {
-        val questionTextResId = questionBank[currentIndex].textResId
+    radioButton1.isChecked = false
+    radioButton2.isChecked = false
+    radioButton3.isChecked = false
 
-        val answer1 = questionBank[currentIndex].answer1
-        val answer2 = questionBank[currentIndex].answer2
-        val answer3 = questionBank[currentIndex].answer3
+  }
 
-        questionTextView.setText(questionTextResId)
+  // Функция для проверки ответа, переданного в качестве параметра функции...
+  private fun checkAnswer(userAnswer: String) {
 
-        if (currentIndex % 2 == 0) {
-            radioButton1.setText(answer2)
-            radioButton2.setText(answer1)
-            radioButton3.setText(answer3)
-        }
-
-        else {
-            radioButton1.setText(answer1)
-            radioButton2.setText(answer2)
-            radioButton3.setText(answer3)
-        }
-
-        prevButton.isVisible = true
-        nextButton.isVisible = true
-
-        if (currentIndex == 0)
-            prevButton.isVisible = false
-
-        if (currentIndex == questionBank.size - 1)
-            nextButton.isVisible = false
-
-
-        radioButton1.isChecked = false
-        radioButton2.isChecked = false
-        radioButton3.isChecked = false
-
+    val correctAnswer = getString(questionBank[currentIndex].answer1)
+    val messageResId = if (userAnswer == correctAnswer) {
+      R.string.correct_toast
+    } else {
+      R.string.incorrect_toast
     }
 
-    // Функция для проверки ответа, переданного в качестве параметра функции...
-    private fun checkAnswer(userAnswer: String) {
-        
-        val correctAnswer = getString(questionBank[currentIndex].answer1)
-        val messageResId = if (userAnswer == correctAnswer) {
-            R.string.correct_toast
-        } else {
-            R.string.incorrect_toast
-        }
+    Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
 
-        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
-
-    }
+  }
 
 }
