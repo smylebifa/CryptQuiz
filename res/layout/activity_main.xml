@@ -5,41 +5,73 @@
   android:layout_height="match_parent"
   android:gravity="center"
   android:orientation="vertical">
+
   <TextView
     android:id="@+id/question_text_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
+    android:layout_gravity="center"
+    android:layout_marginBottom="20dp"
     android:padding="24dp"
-    tools:text="@string/question_australia" />
+    android:textColor="#000000"
+    android:textSize="20sp"
+    tools:text="@string/question_1" />
+
+
+
+  <RadioGroup
+    android:id="@+id/radioGroup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <RadioButton
+      android:id="@+id/radio_1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="24dp"
+      android:text="@string/answer_1_1"
+      android:layout_weight="1"
+      android:layout_marginBottom="5dp"
+      android:checked="false"/>
+
+    <RadioButton
+      android:id="@+id/radio_2"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="24dp"
+      android:layout_weight="1"
+      android:text="@string/answer_1_2"
+      android:layout_marginBottom="5dp"
+      android:checked="false"/>
+
+    <RadioButton
+      android:id="@+id/radio_3"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="24dp"
+      android:layout_weight="1"
+      android:text="@string/answer_1_3"
+      android:layout_marginBottom="5dp"
+      android:checked="false"/>
+  </RadioGroup>
+
 
   <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <Button
-      android:id="@+id/true_button"
+    android:orientation="vertical">
+
+    <LinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/true_button" />
-    <Button
-      android:id="@+id/false_button"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/false_button" />
-
-  </LinearLayout>
-
-  <LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+      android:layout_gravity="center">
 
     <ImageButton
       android:id="@+id/prev_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-
       android:src="@drawable/arrow_left"
       android:drawableRight="@drawable/arrow_left"/>
 
@@ -48,10 +80,17 @@
       android:id="@+id/next_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-
       android:src="@drawable/arrow_right"
       android:drawableRight="@drawable/arrow_right"/>
 
+    </LinearLayout>
+
+    <Button
+      android:id="@+id/cheat_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="54dp"
+      android:text="@string/cheat_button" />
 
   </LinearLayout>
 </LinearLayout>

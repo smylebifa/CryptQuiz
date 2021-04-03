@@ -1,68 +1,110 @@
 package ru.samoilov.geoquiz
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 
 
-private lateinit var trueButton: Button
-private lateinit var falseButton: Button
+// Создаем переменные для объектов интерфейса...
 private lateinit var prevButton: ImageButton
 private lateinit var nextButton: ImageButton
 private lateinit var questionTextView: TextView
+private lateinit var radioButton1: RadioButton
+private lateinit var radioButton2: RadioButton
+private lateinit var radioButton3: RadioButton
+private lateinit var cheatButton: Button
 
-private const val TAG = "MainActivity"
 
+// Банк вопросов по криптографии с 3 вариантами ответа, первый из которых верный...
 private val questionBank = listOf(
-        Question(R.string.question_australia, true),
-        Question(R.string.question_oceans, true),
-        Question(R.string.question_mideast, false),
-        Question(R.string.question_africa, false),
-        Question(R.string.question_americas, true),
-        Question(R.string.question_asia, true))
+        Question(R.string.question_1, R.string.answer_1_1, R.string.answer_1_2, R.string.answer_1_3),
+        Question(R.string.question_2, R.string.answer_2_1, R.string.answer_2_2, R.string.answer_2_3),
+        Question(R.string.question_3, R.string.answer_3_1, R.string.answer_3_2, R.string.answer_3_3),
+        Question(R.string.question_4, R.string.answer_4_1, R.string.answer_4_2, R.string.answer_4_3),
+        Question(R.string.question_5, R.string.answer_5_1, R.string.answer_5_2, R.string.answer_5_3),
+        Question(R.string.question_6, R.string.answer_6_1, R.string.answer_6_2, R.string.answer_6_3),
+        Question(R.string.question_7, R.string.answer_7_1, R.string.answer_7_2, R.string.answer_7_3),
+        Question(R.string.question_8, R.string.answer_8_1, R.string.answer_8_2, R.string.answer_8_3),
+        Question(R.string.question_9, R.string.answer_9_1, R.string.answer_9_2, R.string.answer_9_3),
+        Question(R.string.question_10, R.string.answer_10_1, R.string.answer_10_2, R.string.answer_10_3))
 
+// Переменная для подсчета номера вопроса...
 private var currentIndex = 0
 
 
 class MainActivity : AppCompatActivity() {
+
+    @SuppressLint("ClickableViewAccessibility")
+
+    // Основная функция при запуске приложения...
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.d(TAG,"onCreate(Bundle?) called")
-
         setContentView(R.layout.activity_main)
 
-        trueButton = findViewById(R.id.true_button)
-        falseButton = findViewById(R.id.false_button)
+        // Присвоение переменным элементам интерфейса activity_main...
         prevButton = findViewById(R.id.prev_button)
         nextButton = findViewById(R.id.next_button)
         questionTextView = findViewById(R.id.question_text_view)
+        radioButton1 = findViewById(R.id.radio_1)
+        radioButton2 =findViewById(R.id.radio_2)
+        radioButton3 = findViewById(R.id.radio_3)
+        cheatButton = findViewById(R.id.cheat_button)
 
-        trueButton.setOnClickListener { view: View ->
-            checkAnswer(true)
-        }
+        // Обновляем в начале для скрытия кнопки назад...
+        updateQuestion()
 
-        falseButton.setOnClickListener {view: View ->
-            checkAnswer(false)
-        }
+        // Выбор предыдущего вопроса с вариантами ответов при нажатии на кнопку prev...
+        prevButton.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_UP -> {
+                     if (currentIndex != 0) {
+                         currentIndex--
+                         updateQuestion()
+                     }
 
-        prevButton.setOnClickListener {
-            currentIndex = if (currentIndex == 0) {
-                questionBank.size - 1
-            } else {
-                (currentIndex - 1) % questionBank.size
+                }
             }
-            updateQuestion()
+
+            v?.onTouchEvent(event) ?: true
         }
 
-        nextButton.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBank.size
-            updateQuestion()
+        // Выбор следующего вопроса с вариантами ответов при нажатии на кнопку next...
+        nextButton.setOnTouchListener { v, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_UP -> {
+                        if (currentIndex != questionBank.size - 1) {
+                            currentIndex++
+                            updateQuestion()
+                    }
+
+                    }
+            }
+
+            v?.onTouchEvent(event) ?: true
+        }
+
+        // Вывод сообщения верно или нет выбран ответ при нажатии на кнопку проверить...
+        cheatButton.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_UP -> {
+                    when {
+                        radioButton1.isChecked -> checkAnswer(radioButton1.text.toString())
+                        radioButton2.isChecked -> checkAnswer(radioButton2.text.toString())
+                        else -> checkAnswer(radioButton3.text.toString())
+                    }
+                }
+            }
+
+            v?.onTouchEvent(event) ?: true
         }
 
         updateQuestion()
@@ -70,44 +112,58 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG,"onStart() called")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume() called")
-    }
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause() called")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop() called")
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy() called")
-    }
-
-
-
+    // Отображение текущего вопроса в поле TextView, ответов в качестве текста у RadioButton.
+    // Номер правильного ответа чередуется в такой последовательности 1 - 2 - 1 - 2 - etc.
+    // Проверка для отображения кнопок и скрытия для первого и последнего вопроса соотвественно...
     private fun updateQuestion() {
         val questionTextResId = questionBank[currentIndex].textResId
+
+        val answer1 = questionBank[currentIndex].answer1
+        val answer2 = questionBank[currentIndex].answer2
+        val answer3 = questionBank[currentIndex].answer3
+
         questionTextView.setText(questionTextResId)
+
+        if (currentIndex % 2 == 0) {
+            radioButton1.setText(answer2)
+            radioButton2.setText(answer1)
+            radioButton3.setText(answer3)
+        }
+
+        else {
+            radioButton1.setText(answer1)
+            radioButton2.setText(answer2)
+            radioButton3.setText(answer3)
+        }
+
+        prevButton.isVisible = true
+        nextButton.isVisible = true
+
+        if (currentIndex == 0)
+            prevButton.isVisible = false
+
+        if (currentIndex == questionBank.size - 1)
+            nextButton.isVisible = false
+
+
+        radioButton1.isChecked = false
+        radioButton2.isChecked = false
+        radioButton3.isChecked = false
+
     }
 
-    private fun checkAnswer(userAnswer: Boolean) {
-        val correctAnswer = questionBank[currentIndex].answer
+    // Функция для проверки ответа, переданного в качестве параметра функции...
+    private fun checkAnswer(userAnswer: String) {
+        
+        val correctAnswer = getString(questionBank[currentIndex].answer1)
         val messageResId = if (userAnswer == correctAnswer) {
             R.string.correct_toast
         } else {
             R.string.incorrect_toast
         }
+
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+
     }
 
 }
