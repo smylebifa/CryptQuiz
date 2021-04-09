@@ -1,10 +1,12 @@
 package ru.samoilov.geoquiz
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 
 
@@ -41,9 +43,8 @@ private var countOfCheats = 0
 
 class MainActivity : AppCompatActivity() {
 
-  @SuppressLint("ClickableViewAccessibility")
-
   // Основная функция при запуске приложения...
+  @SuppressLint("ClickableViewAccessibility")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -104,9 +105,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             countOfCheats++
-          }
-
-          else {
+          } else {
             Toast.makeText(this, R.string.limit_cheats, Toast.LENGTH_SHORT).show()
           }
         }
@@ -114,6 +113,21 @@ class MainActivity : AppCompatActivity() {
 
       v?.onTouchEvent(event) ?: true
     }
+
+
+    showResult.setOnTouchListener { v, event ->
+      when (event.action) {
+        MotionEvent.ACTION_UP -> {
+
+          val intent = Intent(this, Results::class.java)
+          startActivity(intent)
+
+        }
+      }
+
+      v?.onTouchEvent(event) ?: true
+    }
+
 
     updateQuestion()
 
