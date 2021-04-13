@@ -15,21 +15,21 @@
           android:layout_width="50dp"
           android:layout_height="wrap_content"
           android:textAppearance="?android:attr/textAppearanceLarge"
-          android:layout_marginLeft="110dp"
-          android:text="question"/>
+          android:layout_marginLeft="90dp"
+          android:text="Вопросы"/>
 
         <Space
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_weight="1"
-          android:minWidth="110dp"/>
+          android:minWidth="130dp"/>
 
         <TextView
           android:id="@+id/answer"
           android:layout_width="50dp"
           android:layout_height="wrap_content"
           android:textAppearance="?android:attr/textAppearanceLarge"
-          android:text="answer"/>
+          android:text="Ответы"/>
 
     </LinearLayout>
 

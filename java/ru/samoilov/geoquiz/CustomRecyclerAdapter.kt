@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class CustomRecyclerAdapter(private val names: List<String>) :
+
+class CustomRecyclerAdapter(private var results: IntArray) :
     RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         var questionNumber: TextView? = null
         var answer: TextView? = null
 
@@ -20,6 +22,7 @@ class CustomRecyclerAdapter(private val names: List<String>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        
         val itemView = LayoutInflater.from(parent.context).inflate(
             R.layout.recyclerview_item, parent, false)
 
@@ -27,9 +30,12 @@ class CustomRecyclerAdapter(private val names: List<String>) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.questionNumber?.text = names[position]
-        holder.answer?.text = "+"
+
+        holder.questionNumber?.text = position.toString()
+
+        if (results[position - 1] == 1) holder.answer?.text = "+"
+        else holder.answer?.text = "-"
     }
 
-    override fun getItemCount() = names.size
+    override fun getItemCount() = results.size
 }

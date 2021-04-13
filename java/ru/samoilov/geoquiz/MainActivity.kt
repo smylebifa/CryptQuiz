@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.MotionEvent
-import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -19,6 +18,7 @@ private lateinit var radioButton2: RadioButton
 private lateinit var radioButton3: RadioButton
 private lateinit var cheatButton: Button
 private lateinit var showResult: Button
+private lateinit var exit: Button
 
 
 // Банк вопросов по криптографии с 3 вариантами ответа, первый из которых верный...
@@ -40,6 +40,7 @@ private var currentIndex = 0
 // Переменная для подсчета количества использованных подсказок...
 private var countOfCheats = 0
 
+private var results: IntArray = intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity() {
     radioButton3 = findViewById(R.id.radio_3)
     cheatButton = findViewById(R.id.cheat_button)
     showResult = findViewById(R.id.show_result)
+    exit = findViewById(R.id.exit)
 
     // Обновляем в начале для скрытия кнопки назад и завершить тест...
     updateQuestion()
@@ -69,6 +71,23 @@ class MainActivity : AppCompatActivity() {
         MotionEvent.ACTION_UP -> {
           if (currentIndex != 0) {
             currentIndex--
+
+            // Сохраняем результат пользователя...
+            when {
+              radioButton1.isChecked -> {
+                if (radioButton1.text.toString() == getString(questionBank[currentIndex].answer1))
+                  results[currentIndex] = 1
+              }
+              radioButton2.isChecked -> {
+                if (radioButton2.text.toString() == getString(questionBank[currentIndex].answer1))
+                  results[currentIndex] = 1
+              }
+              radioButton3.isChecked -> {
+                if (radioButton3.text.toString() == getString(questionBank[currentIndex].answer1))
+                  results[currentIndex] = 1
+              }
+            }
+
             updateQuestion()
           }
 
@@ -84,6 +103,23 @@ class MainActivity : AppCompatActivity() {
         MotionEvent.ACTION_UP -> {
           if (currentIndex != questionBank.size - 1) {
             currentIndex++
+
+            // Сохраняем результат пользователя...
+            when {
+              radioButton1.isChecked -> {
+                if (radioButton1.text.toString() == getString(questionBank[currentIndex].answer1))
+                  results[currentIndex] = 1
+              }
+              radioButton2.isChecked -> {
+                if (radioButton2.text.toString() == getString(questionBank[currentIndex].answer1))
+                  results[currentIndex] = 1
+              }
+              radioButton3.isChecked -> {
+                if (radioButton3.text.toString() == getString(questionBank[currentIndex].answer1))
+                  results[currentIndex] = 1
+              }
+            }
+
             updateQuestion()
           }
 
@@ -92,6 +128,7 @@ class MainActivity : AppCompatActivity() {
 
       v?.onTouchEvent(event) ?: true
     }
+
 
     // Вывод сообщения верно или нет выбран ответ при нажатии на кнопку проверить...
     cheatButton.setOnTouchListener { v, event ->
@@ -114,20 +151,30 @@ class MainActivity : AppCompatActivity() {
       v?.onTouchEvent(event) ?: true
     }
 
-
-    showResult.setOnTouchListener { v, event ->
+    // Выбор следующего вопроса с вариантами ответов при нажатии на кнопку next...
+    exit.setOnTouchListener { v, event ->
       when (event.action) {
         MotionEvent.ACTION_UP -> {
-
-          val intent = Intent(this, Results::class.java)
-          startActivity(intent)
-
+          this.finish()
         }
       }
 
       v?.onTouchEvent(event) ?: true
     }
 
+
+    // Кнопка для отображения результатов...
+    showResult.setOnTouchListener { v, event ->
+      when (event.action) {
+        MotionEvent.ACTION_UP -> {
+          val intent = Intent(this, Results::class.java)
+          intent.putExtra(Results.RESULTS, results)
+          startActivity(intent)
+        }
+      }
+
+      v?.onTouchEvent(event) ?: true
+    }
 
     updateQuestion()
 
@@ -171,7 +218,6 @@ class MainActivity : AppCompatActivity() {
       nextButton.isVisible = false
       showResult.isVisible = true
     }
-
 
     radioButton1.isChecked = false
     radioButton2.isChecked = false
