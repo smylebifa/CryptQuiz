@@ -69,24 +69,26 @@ class MainActivity : AppCompatActivity() {
     prevButton.setOnTouchListener { v, event ->
       when (event.action) {
         MotionEvent.ACTION_UP -> {
-          if (currentIndex != 0) {
-            currentIndex--
 
-            // Сохраняем результат пользователя...
-            when {
-              radioButton1.isChecked -> {
-                if (radioButton1.text.toString() == getString(questionBank[currentIndex].answer1))
-                  results[currentIndex] = 1
-              }
-              radioButton2.isChecked -> {
-                if (radioButton2.text.toString() == getString(questionBank[currentIndex].answer1))
-                  results[currentIndex] = 1
-              }
-              radioButton3.isChecked -> {
-                if (radioButton3.text.toString() == getString(questionBank[currentIndex].answer1))
-                  results[currentIndex] = 1
-              }
+          if (currentIndex != 0) {
+
+          // Сохраняем результат пользователя...
+          when {
+            radioButton1.isChecked -> {
+              if (radioButton1.text.toString() == getString(questionBank[currentIndex].answer1))
+                results[currentIndex] = 1
             }
+            radioButton2.isChecked -> {
+              if (radioButton2.text.toString() == getString(questionBank[currentIndex].answer1))
+                results[currentIndex] = 1
+            }
+            radioButton3.isChecked -> {
+              if (radioButton3.text.toString() == getString(questionBank[currentIndex].answer1))
+                results[currentIndex] = 1
+            }
+          }
+
+            currentIndex--
 
             updateQuestion()
           }
@@ -102,25 +104,27 @@ class MainActivity : AppCompatActivity() {
       when (event.action) {
         MotionEvent.ACTION_UP -> {
           if (currentIndex != questionBank.size - 1) {
+
+          // Сохраняем результат пользователя...
+          when {
+            radioButton1.isChecked -> {
+              if (radioButton1.text.toString() == getString(questionBank[currentIndex].answer1))
+                results[currentIndex] = 1
+            }
+            radioButton2.isChecked -> {
+              if (radioButton2.text.toString() == getString(questionBank[currentIndex].answer1))
+                results[currentIndex] = 1
+            }
+            radioButton3.isChecked -> {
+              if (radioButton3.text.toString() == getString(questionBank[currentIndex].answer1))
+                results[currentIndex] = 1
+            }
+          }
+
             currentIndex++
 
-            // Сохраняем результат пользователя...
-            when {
-              radioButton1.isChecked -> {
-                if (radioButton1.text.toString() == getString(questionBank[currentIndex].answer1))
-                  results[currentIndex] = 1
-              }
-              radioButton2.isChecked -> {
-                if (radioButton2.text.toString() == getString(questionBank[currentIndex].answer1))
-                  results[currentIndex] = 1
-              }
-              radioButton3.isChecked -> {
-                if (radioButton3.text.toString() == getString(questionBank[currentIndex].answer1))
-                  results[currentIndex] = 1
-              }
-            }
+           updateQuestion()
 
-            updateQuestion()
           }
 
         }

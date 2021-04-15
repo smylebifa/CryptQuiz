@@ -7,7 +7,10 @@
   <string name="next_button">Next</string>
   <string name="cheat_button">Проверить</string>
   <string name="show_result">Завершить тест</string>
-
+  <string name="results">Результаты</string>
+  <string name="questions">Вопросы</string>
+  <string name="answers">Ответы</string>
+  <string name="close">Закрыть</string>
 
   <string name="question_1">Что такое шифрование?</string>
   <string name="question_2">Что такое дешифрование?</string>
@@ -50,5 +53,6 @@
   <string name="answer_10_1">Организация, которая выпускает сертификаты</string>
   <string name="answer_10_2">Организация, которая проверяет ключи шифрования</string>
   <string name="answer_10_3">Организация, которая выпускает закрытые ключи и соответствующие алгоритмы</string>
+
 
 </resources>

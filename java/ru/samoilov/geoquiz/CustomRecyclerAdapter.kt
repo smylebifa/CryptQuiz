@@ -31,10 +31,12 @@ class CustomRecyclerAdapter(private var results: IntArray) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.questionNumber?.text = position.toString()
+        val questionNum = position + 1
+        holder.questionNumber?.text = questionNum.toString()
 
-        if (results[position - 1] == 1) holder.answer?.text = "+"
+        if (results[position] == 1) holder.answer?.text = "+"
         else holder.answer?.text = "-"
+
     }
 
     override fun getItemCount() = results.size
