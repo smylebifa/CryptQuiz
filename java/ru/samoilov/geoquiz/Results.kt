@@ -1,15 +1,16 @@
 package ru.samoilov.geoquiz
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.widget.Button
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 private lateinit var exit: Button
+private lateinit var score: TextView
 
 private var results: IntArray = intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
@@ -24,6 +25,10 @@ class Results : AppCompatActivity() {
     results = intent.getIntArrayExtra(RESULTS)!!
 
     exit = findViewById(R.id.exit)
+    score = findViewById(R.id.score)
+
+    val scoreText: String = results.sum().toString() + "/" + results.count().toString()
+    score.text = scoreText
 
     val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
     recyclerView.layoutManager = LinearLayoutManager(this)
