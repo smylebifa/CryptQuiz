@@ -11,6 +11,9 @@
   <string name="questions">Вопросы</string>
   <string name="answers">Ответы</string>
   <string name="close">Закрыть</string>
+  <string name="score">Score</string>
+  <string name="answer_sign">+</string>
+  <string name="question_number">1</string>
 
   <string name="question_1">Что такое шифрование?</string>
   <string name="question_2">Что такое дешифрование?</string>
@@ -53,6 +56,5 @@
   <string name="answer_10_1">Организация, которая выпускает сертификаты</string>
   <string name="answer_10_2">Организация, которая проверяет ключи шифрования</string>
   <string name="answer_10_3">Организация, которая выпускает закрытые ключи и соответствующие алгоритмы</string>
-
 
 </resources>

@@ -12,13 +12,13 @@
       android:id="@+id/title"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginTop="15dp"
+      android:layout_marginBottom="30dp"
       android:text="@string/results"
+      android:textAllCaps="false"
       android:textColor="#000000"
-      android:textSize="20sp"
-      android:layout_marginTop="20dp"
-      android:layout_marginBottom="40dp">
-
-    </TextView>
+      android:textSize="25sp"
+      android:textStyle="bold" />
 
     <LinearLayout
       android:layout_width="wrap_content"
@@ -27,41 +27,48 @@
 
         <TextView
           android:id="@+id/questionName"
-          android:layout_width="100dp"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:textAppearance="?android:attr/textAppearanceLarge"
+          android:textSize="20sp"
+          android:textColor="#000000"
           android:layout_marginLeft="50dp"
           android:text="@string/questions"
-          android:layout_marginStart="50dp" />
+          android:layout_marginStart="40dp" />
 
         <Space
-          android:layout_width="0dp"
+          android:layout_width="51dp"
           android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:minWidth="100dp"/>
+          android:minWidth="51dp"/>
 
         <TextView
           android:id="@+id/answerName"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:textAppearance="?android:attr/textAppearanceLarge"
-          android:text="@string/answers"/>
+          android:textSize="20sp"
+          android:textColor="#000000"
+          android:text="@string/answers"
+          android:layout_marginRight="40dp"
+          android:layout_marginEnd="40dp" />
 
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
       xmlns:app="http://schemas.android.com/apk/res-auto"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content">
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="62dp"
+      android:layout_marginRight="63dp"
+      android:layout_marginStart="62dp"
+      android:layout_marginEnd="63dp">
 
         <androidx.recyclerview.widget.RecyclerView
           android:id="@+id/recyclerView"
           android:layout_width="0dp"
           android:layout_height="330dp"
-          android:layout_marginBottom="8dp"
-          android:layout_marginEnd="8dp"
-          android:layout_marginStart="8dp"
-          android:layout_marginTop="8dp"
+          android:layout_marginBottom="5dp"
+          android:layout_marginEnd="5dp"
+          android:layout_marginStart="5dp"
+          android:layout_marginTop="5dp"
           tools:listitem="@layout/recyclerview_item"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
@@ -74,11 +81,12 @@
       android:id="@+id/score"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginTop="5dp"
+      android:text="@string/score"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      android:text="9/10"
-      android:layout_marginTop="20dp"
       android:textColor="#000000"
-      android:textSize="30sp"/>
+      android:textSize="30sp"
+      android:textStyle="bold" />
 
     <Button
       android:id="@+id/exit"

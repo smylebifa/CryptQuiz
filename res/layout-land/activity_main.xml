@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:layout_gravity="center">
@@ -10,16 +9,18 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:padding="20dp"
+    android:padding="10dp"
     android:textColor="#000000"
     android:textSize="20sp"
-    tools:text="@string/question_1" />
+    android:layout_marginTop="10dp"
+    android:text="@string/question_1" />
 
   <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical|center_horizontal"
-    android:layout_marginBottom="20dp">
+    android:layout_marginBottom="60dp"
+    android:layout_marginTop="20dp">
 
     <RadioGroup
       android:id="@+id/radioGroup"
@@ -51,8 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/answer_1_3"
-        android:layout_marginBottom="5dp"
-        android:checked="false"/>
+        android:checked="false"
+        android:layout_marginBottom="5dp"/>
     </RadioGroup>
 
   </LinearLayout>
@@ -60,7 +61,7 @@
   <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center|bottom">
+    android:layout_gravity="center_vertical|center_horizontal|bottom">
 
     <LinearLayout
       android:layout_width="wrap_content"
@@ -76,7 +77,9 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:src="@drawable/arrow_left"
-          android:drawableRight="@drawable/arrow_left"/>
+          android:drawableRight="@drawable/arrow_left"
+          android:drawableEnd="@drawable/arrow_left"
+          android:contentDescription="@string/prev_button" />
 
         <Space
           android:layout_width="wrap_content"
@@ -103,10 +106,17 @@
           android:layout_height="wrap_content"
           android:src="@drawable/arrow_right"
 
-          android:drawableRight="@drawable/arrow_right"/>
+          android:drawableRight="@drawable/arrow_right"
+          android:drawableEnd="@drawable/arrow_right"
+          android:contentDescription="@string/next_button" />
 
       </LinearLayout>
 
+      <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:minHeight="5dp"/>
 
       <Button
         android:id="@+id/show_result"
@@ -114,13 +124,23 @@
         android:layout_height="wrap_content"
         android:text="@string/show_result"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"/>
+        />
 
+      <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:minHeight="5dp"/>
+
+      <Button
+        android:id="@+id/exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/close"/>
+
+      </LinearLayout>
 
     </LinearLayout>
-
-
-  </LinearLayout>
 
 </FrameLayout>
