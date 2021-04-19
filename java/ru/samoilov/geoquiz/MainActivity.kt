@@ -42,6 +42,10 @@ private var countOfCheats = 0
 
 private var results: IntArray = intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
+private var viewed: IntArray = intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+
+private var rnds: Int = 0
+
 class MainActivity : AppCompatActivity() {
 
   // Основная функция при запуске приложения...
@@ -72,21 +76,8 @@ class MainActivity : AppCompatActivity() {
 
           if (currentIndex != 0) {
 
-          // Сохраняем результат пользователя...
-          when {
-            radioButton1.isChecked -> {
-              if (radioButton1.text.toString() == getString(questionBank[currentIndex].answer1))
-                results[currentIndex] = 1
-            }
-            radioButton2.isChecked -> {
-              if (radioButton2.text.toString() == getString(questionBank[currentIndex].answer1))
-                results[currentIndex] = 1
-            }
-            radioButton3.isChecked -> {
-              if (radioButton3.text.toString() == getString(questionBank[currentIndex].answer1))
-                results[currentIndex] = 1
-            }
-          }
+            // Сохраняем результат пользователя...
+            saveResult()
 
             currentIndex--
 
@@ -105,25 +96,12 @@ class MainActivity : AppCompatActivity() {
         MotionEvent.ACTION_UP -> {
           if (currentIndex != questionBank.size - 1) {
 
-          // Сохраняем результат пользователя...
-          when {
-            radioButton1.isChecked -> {
-              if (radioButton1.text.toString() == getString(questionBank[currentIndex].answer1))
-                results[currentIndex] = 1
-            }
-            radioButton2.isChecked -> {
-              if (radioButton2.text.toString() == getString(questionBank[currentIndex].answer1))
-                results[currentIndex] = 1
-            }
-            radioButton3.isChecked -> {
-              if (radioButton3.text.toString() == getString(questionBank[currentIndex].answer1))
-                results[currentIndex] = 1
-            }
-          }
+            // Сохраняем результат пользователя...
+            saveResult()
 
             currentIndex++
 
-           updateQuestion()
+            updateQuestion()
 
           }
 
@@ -146,6 +124,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             countOfCheats++
+
           } else {
             Toast.makeText(this, R.string.limit_cheats, Toast.LENGTH_SHORT).show()
           }
@@ -180,10 +159,34 @@ class MainActivity : AppCompatActivity() {
       v?.onTouchEvent(event) ?: true
     }
 
-    updateQuestion()
-
   }
 
+  private fun saveResult() {
+    // Сохраняем результат пользователя...
+    when {
+      radioButton1.isChecked -> {
+        if (radioButton1.text.toString() == getString(questionBank[currentIndex].answer1))
+          results[currentIndex] = 1
+
+        viewed[currentIndex] = 1
+
+      }
+      radioButton2.isChecked -> {
+        if (radioButton2.text.toString() == getString(questionBank[currentIndex].answer1))
+          results[currentIndex] = 1
+
+        viewed[currentIndex] = 2
+
+      }
+      radioButton3.isChecked -> {
+        if (radioButton3.text.toString() == getString(questionBank[currentIndex].answer1))
+          results[currentIndex] = 1
+
+        viewed[currentIndex] = 3
+
+      }
+    }
+  }
 
   // Отображение текущего вопроса в поле TextView, ответов в качестве текста у RadioButton.
   // Номер правильного ответа чередуется в такой последовательности 1 - 2 - 1 - 2 - etc.
@@ -197,16 +200,39 @@ class MainActivity : AppCompatActivity() {
 
     questionTextView.setText(questionTextResId)
 
-    if (currentIndex % 2 == 0) {
-      radioButton1.setText(answer2)
-      radioButton2.setText(answer1)
-      radioButton3.setText(answer3)
+    radioButton1.isChecked = true
+
+    rnds = (1..3).random()
+
+    if (viewed[currentIndex] == 0) {
+      when (rnds) {
+        1 -> {
+          radioButton1.setText(answer1)
+          radioButton2.setText(answer2)
+          radioButton3.setText(answer3)
+        }
+        2 -> {
+          radioButton1.setText(answer2)
+          radioButton2.setText(answer3)
+          radioButton3.setText(answer1)
+        }
+        3 -> {
+          radioButton1.setText(answer3)
+          radioButton2.setText(answer1)
+          radioButton3.setText(answer2)
+        }
+      }
+
+      viewed[currentIndex] = 1
+
     }
 
     else {
-      radioButton1.setText(answer1)
-      radioButton2.setText(answer2)
-      radioButton3.setText(answer3)
+      when {
+        viewed[currentIndex] == 1 -> radioButton1.isChecked = true
+        viewed[currentIndex] == 2 -> radioButton2.isChecked = true
+        viewed[currentIndex] == 3 -> radioButton3.isChecked = true
+      }
     }
 
     // Скрываем кнопку завершения теста...
@@ -222,10 +248,6 @@ class MainActivity : AppCompatActivity() {
       nextButton.isVisible = false
       showResult.isVisible = true
     }
-
-    radioButton1.isChecked = false
-    radioButton2.isChecked = false
-    radioButton3.isChecked = false
 
   }
 
