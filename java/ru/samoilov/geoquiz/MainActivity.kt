@@ -21,7 +21,8 @@ private lateinit var showResult: Button
 private lateinit var exit: Button
 
 
-// Банк вопросов по криптографии с 3 вариантами ответа, первый из которых верный...
+// Банк вопросов и ответов по криптографии, включающий в себя 1 вопрос и 3 варианта ответа,
+// первый из которых верный...
 private val questionBank = listOf(
         Question(R.string.question_1, R.string.answer_1_1, R.string.answer_1_2, R.string.answer_1_3),
         Question(R.string.question_2, R.string.answer_2_1, R.string.answer_2_2, R.string.answer_2_3),
@@ -34,28 +35,34 @@ private val questionBank = listOf(
         Question(R.string.question_9, R.string.answer_9_1, R.string.answer_9_2, R.string.answer_9_3),
         Question(R.string.question_10, R.string.answer_10_1, R.string.answer_10_2, R.string.answer_10_3))
 
-// Переменная для подсчета номера вопроса...
+// Переменная currentIndex для подсчета номера вопроса...
 private var currentIndex = 0
 
-// Переменная для подсчета количества использованных подсказок...
+// Переменная countOfCheats для подсчета количества использованных подсказок...
 private var countOfCheats = 0
 
+// Переменная results для сохранения ответов пользователя...
 private var results: IntArray = intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
+// Переменная viewed для сохранения и отображения выбранных пользователем вариантов ответа...
 private var viewed: IntArray = intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
+// Переменная rnds для генерации случайного порядка расположения вариантов ответов...
 private var rnds: Int = 0
+
 
 class MainActivity : AppCompatActivity() {
 
-  // Основная функция при запуске приложения...
   @SuppressLint("ClickableViewAccessibility")
+  
+  // Основная функция при запуске приложения...
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    // Установка макета activity_main.xml в качестве представления для MainActivity...
     setContentView(R.layout.activity_main)
 
-    // Присвоение переменным элементам интерфейса activity_main...
+    // Присвоение переменным элементов интерфейса activity_main...
     prevButton = findViewById(R.id.prev_button)
     nextButton = findViewById(R.id.next_button)
     questionTextView = findViewById(R.id.question_text_view)
@@ -66,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     showResult = findViewById(R.id.show_result)
     exit = findViewById(R.id.exit)
 
-    // Обновляем в начале для скрытия кнопки назад и завершить тест...
+    // Используем функцию для скрытия кнопки назад и завершить тест...
     updateQuestion()
 
     // Выбор предыдущего вопроса с вариантами ответов при нажатии на кнопку prev...
@@ -74,14 +81,16 @@ class MainActivity : AppCompatActivity() {
       when (event.action) {
         MotionEvent.ACTION_UP -> {
 
+          // Если текущий вопрос не первый в списке, возвращаем предыдущий...
           if (currentIndex != 0) {
 
-            // Сохраняем результат пользователя...
+            // Сохраняем выбранный вариант ответа на данном вопросе...
             saveResult()
 
+            // Возвращяем предыдущий вопрос...
             currentIndex--
-
             updateQuestion()
+
           }
 
         }
@@ -94,13 +103,15 @@ class MainActivity : AppCompatActivity() {
     nextButton.setOnTouchListener { v, event ->
       when (event.action) {
         MotionEvent.ACTION_UP -> {
+
+          // Если текущий вопрос не последний в списке, возвращаем следующий...
           if (currentIndex != questionBank.size - 1) {
 
-            // Сохраняем результат пользователя...
+            // Сохраняем выбранный вариант ответа на данном вопросе...
             saveResult()
 
+            // Возвращяем следующий вопрос...
             currentIndex++
-
             updateQuestion()
 
           }
@@ -111,11 +122,13 @@ class MainActivity : AppCompatActivity() {
       v?.onTouchEvent(event) ?: true
     }
 
-
     // Вывод сообщения верно или нет выбран ответ при нажатии на кнопку проверить...
     cheatButton.setOnTouchListener { v, event ->
       when (event.action) {
         MotionEvent.ACTION_UP -> {
+
+          // Если количество попыток проверки ответа не превышает 3, 
+          // вызываем функцию проверки ответа и передаем выбранный вариант...
           if (countOfCheats < 3) {
             when {
               radioButton1.isChecked -> checkAnswer(radioButton1.text.toString())
@@ -123,9 +136,13 @@ class MainActivity : AppCompatActivity() {
               else -> checkAnswer(radioButton3.text.toString())
             }
 
+            // Увеличиваем количество попыток на единицу...
             countOfCheats++
 
-          } else {
+          } 
+
+          // Иначе выводим сообщение о превышении количества попыток проверки ответа...
+          else {
             Toast.makeText(this, R.string.limit_cheats, Toast.LENGTH_SHORT).show()
           }
         }
@@ -134,7 +151,8 @@ class MainActivity : AppCompatActivity() {
       v?.onTouchEvent(event) ?: true
     }
 
-    // Выбор следующего вопроса с вариантами ответов при нажатии на кнопку next...
+
+    // Завершение работы активности...
     exit.setOnTouchListener { v, event ->
       when (event.action) {
         MotionEvent.ACTION_UP -> {
@@ -145,11 +163,13 @@ class MainActivity : AppCompatActivity() {
       v?.onTouchEvent(event) ?: true
     }
 
-
-    // Кнопка для отображения результатов...
+    // Кнопка отображения результатов, появляющаяся на последнем вопросе...
     showResult.setOnTouchListener { v, event ->
       when (event.action) {
         MotionEvent.ACTION_UP -> {
+
+          // Создаем интент с передачей параметра результатов пользователя 
+          // и запускаем новую активность Results...
           val intent = Intent(this, Results::class.java)
           intent.putExtra(Results.RESULTS, results)
           startActivity(intent)
@@ -161,49 +181,63 @@ class MainActivity : AppCompatActivity() {
 
   }
 
+  // Сохраняем результат пользователя и вариант выбранного ответа 
+  // для дальнейшнего отображения при просмотре выбранных вариантов...
   private fun saveResult() {
-    // Сохраняем результат пользователя...
     when {
+
+      // Выбран 1-ый radiobutton...
       radioButton1.isChecked -> {
+
         if (radioButton1.text.toString() == getString(questionBank[currentIndex].answer1))
           results[currentIndex] = 1
 
         viewed[currentIndex] = 1
 
       }
+
+      // Выбран 2-ой radiobutton...
       radioButton2.isChecked -> {
+
         if (radioButton2.text.toString() == getString(questionBank[currentIndex].answer1))
           results[currentIndex] = 1
 
         viewed[currentIndex] = 2
 
       }
+
+      // Выбран 3-ий radiobutton...
       radioButton3.isChecked -> {
+
         if (radioButton3.text.toString() == getString(questionBank[currentIndex].answer1))
           results[currentIndex] = 1
 
         viewed[currentIndex] = 3
 
       }
+
     }
   }
 
-  // Отображение текущего вопроса в поле TextView, ответов в качестве текста у RadioButton.
-  // Номер правильного ответа чередуется в такой последовательности 1 - 2 - 1 - 2 - etc.
-  // Проверка для отображения кнопок и скрытия для первого и последнего вопроса соотвественно...
+  // Обновление вопроса и ответов...
   private fun updateQuestion() {
-    val questionTextResId = questionBank[currentIndex].textResId
 
+    // Отображение нового вопроса...
+    val questionTextResId = questionBank[currentIndex].textResId
+    questionTextView.setText(questionTextResId)
+
+    // Сохраняем варианты ответов для дальнейшего отображения...
     val answer1 = questionBank[currentIndex].answer1
     val answer2 = questionBank[currentIndex].answer2
     val answer3 = questionBank[currentIndex].answer3
 
-    questionTextView.setText(questionTextResId)
-
+    // Устанавливаем по умолчанию первый вариант ответа для radiobutton...
     radioButton1.isChecked = true
 
+    // Генерируем в диапазоне от 1 до 3 случайное целое число...
     rnds = (1..3).random()
 
+    // Если вопрос новый, тогда генерируем варианты ответов в случайном порядке...
     if (viewed[currentIndex] == 0) {
       when (rnds) {
         1 -> {
@@ -223,10 +257,10 @@ class MainActivity : AppCompatActivity() {
         }
       }
 
-      viewed[currentIndex] = 1
-
     }
 
+    // Если текущий вопрос уже был просмотрен пользователем, например, при переходе 
+    // на предудущий вопрос, устанавливаем сохраненный вариант выбранного ответа...
     else {
       when {
         viewed[currentIndex] == 1 -> radioButton1.isChecked = true
@@ -238,12 +272,16 @@ class MainActivity : AppCompatActivity() {
     // Скрываем кнопку завершения теста...
     showResult.isVisible = false
 
+    // Отображаем кнопки вперед и назад...
     prevButton.isVisible = true
     nextButton.isVisible = true
 
+    // В случае если текущий вопрос - первый, скрываем кнопку назад...
     if (currentIndex == 0)
       prevButton.isVisible = false
 
+    // В случае если текущий вопрос - последний, скрываем кнопку вперед и показываем 
+    // кнопку отображения результаов...
     if (currentIndex == questionBank.size - 1) {
       nextButton.isVisible = false
       showResult.isVisible = true
@@ -251,7 +289,8 @@ class MainActivity : AppCompatActivity() {
 
   }
 
-  // Функция для проверки ответа, переданного в качестве параметра функции...
+  // Функция для проверки ответа, переданного в качестве параметра функции и вывода сообщений
+  // верно или не верно выбран ответ...
   private fun checkAnswer(userAnswer: String) {
 
     val correctAnswer = getString(questionBank[currentIndex].answer1)
